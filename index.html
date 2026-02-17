@@ -268,6 +268,25 @@
             margin-left: 8px;
         }
 
+        .channel-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+
+        .badge-meta {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-google {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
         .calc-btn {
             display: inline-block;
             padding: 8px 16px;
@@ -688,15 +707,48 @@
                             <div id="sectorInfoBase" class="sector-info hidden"></div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="cpmBase">CPM (€) <span class="kpi-badge hidden" id="cpmBadgeBase">AUTO</span></label>
+                        <!-- CANALE BASE -->
+                        <div class="form-group full-width">
+                            <label for="canaleBase">📱 Canale Pubblicitario *</label>
+                            <select id="canaleBase" required>
+                                <option value="meta">Meta Ads (Facebook/Instagram)</option>
+                                <option value="google">Google Ads</option>
+                            </select>
+                        </div>
+
+                        <!-- CPM BASE (Meta) -->
+                        <div class="form-group" id="cpmGroupBase">
+                            <label for="cpmBase">
+                                CPM (€) 
+                                <span class="channel-badge badge-meta">META</span>
+                                <span class="kpi-badge hidden" id="cpmBadgeBase">AUTO</span>
+                            </label>
                             <div class="input-wrapper">
-                                <input type="number" id="cpmBase" required min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <input type="number" id="cpmBase" min="0" step="0.01" placeholder="Seleziona settore" readonly>
                                 <span class="input-suffix">€</span>
                             </div>
+                            <small style="display:block;margin-top:5px;color:#666;">Costo per 1000 impressioni</small>
                             <div class="toggle-manual">
                                 <input type="checkbox" id="cpmManualBase">
                                 <label for="cpmManualBase">Manuale</label>
+                            </div>
+                        </div>
+
+                        <!-- CPC BASE (Google) -->
+                        <div class="form-group hidden" id="cpcGroupBase">
+                            <label for="cpcBase">
+                                CPC (€) 
+                                <span class="channel-badge badge-google">GOOGLE</span>
+                                <span class="kpi-badge hidden" id="cpcBadgeBase">AUTO</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" id="cpcBase" min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <small style="display:block;margin-top:5px;color:#666;">Costo per click</small>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="cpcManualBase">
+                                <label for="cpcManualBase">Manuale</label>
                             </div>
                         </div>
 
@@ -748,6 +800,15 @@
                                 <option value="">-- Seleziona --</option>
                             </select>
                             <div id="sectorInfoInt" class="sector-info hidden"></div>
+                        </div>
+
+                        <!-- CANALE INTERMEDIO -->
+                        <div class="form-group full-width">
+                            <label for="canaleInt">📱 Canale Pubblicitario *</label>
+                            <select id="canaleInt" required>
+                                <option value="meta">Meta Ads (Facebook/Instagram)</option>
+                                <option value="google">Google Ads</option>
+                            </select>
                         </div>
 
                         <div class="form-group full-width">
@@ -807,16 +868,37 @@
                             <input type="number" id="obiettivoNumeroValueInt" min="1" placeholder="500">
                         </div>
 
-                        <!-- KPI MANUALI INTERMEDIO -->
-                        <div class="form-group">
-                            <label for="cpmInt">CPM (€) <span class="kpi-badge hidden" id="cpmBadgeInt">AUTO</span></label>
+                        <!-- CPM INT (Meta) -->
+                        <div class="form-group" id="cpmGroupInt">
+                            <label for="cpmInt">
+                                CPM (€) 
+                                <span class="channel-badge badge-meta">META</span>
+                                <span class="kpi-badge hidden" id="cpmBadgeInt">AUTO</span>
+                            </label>
                             <div class="input-wrapper">
-                                <input type="number" id="cpmInt" required min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <input type="number" id="cpmInt" min="0" step="0.01" placeholder="Seleziona settore" readonly>
                                 <span class="input-suffix">€</span>
                             </div>
                             <div class="toggle-manual">
                                 <input type="checkbox" id="cpmManualInt">
                                 <label for="cpmManualInt">Manuale</label>
+                            </div>
+                        </div>
+
+                        <!-- CPC INT (Google) -->
+                        <div class="form-group hidden" id="cpcGroupInt">
+                            <label for="cpcInt">
+                                CPC (€) 
+                                <span class="channel-badge badge-google">GOOGLE</span>
+                                <span class="kpi-badge hidden" id="cpcBadgeInt">AUTO</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" id="cpcInt" min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="cpcManualInt">
+                                <label for="cpcManualInt">Manuale</label>
                             </div>
                         </div>
 
@@ -860,6 +942,15 @@
                                 <option value="">-- Seleziona --</option>
                             </select>
                             <div id="sectorInfoAdv" class="sector-info hidden"></div>
+                        </div>
+
+                        <!-- CANALE AVANZATO -->
+                        <div class="form-group full-width">
+                            <label for="canaleAdv">📱 Canale Pubblicitario *</label>
+                            <select id="canaleAdv" required>
+                                <option value="meta">Meta Ads (Facebook/Instagram)</option>
+                                <option value="google">Google Ads</option>
+                            </select>
                         </div>
 
                         <!-- DATI PRODOTTO/SERVIZIO -->
@@ -936,16 +1027,37 @@
                             </div>
                         </div>
 
-                        <!-- KPI MANUALI AVANZATO -->
-                        <div class="form-group">
-                            <label for="cpmAdv">CPM (€) <span class="kpi-badge hidden" id="cpmBadgeAdv">AUTO</span></label>
+                        <!-- CPM ADV (Meta) -->
+                        <div class="form-group" id="cpmGroupAdv">
+                            <label for="cpmAdv">
+                                CPM (€) 
+                                <span class="channel-badge badge-meta">META</span>
+                                <span class="kpi-badge hidden" id="cpmBadgeAdv">AUTO</span>
+                            </label>
                             <div class="input-wrapper">
-                                <input type="number" id="cpmAdv" required min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <input type="number" id="cpmAdv" min="0" step="0.01" placeholder="Seleziona settore" readonly>
                                 <span class="input-suffix">€</span>
                             </div>
                             <div class="toggle-manual">
                                 <input type="checkbox" id="cpmManualAdv">
                                 <label for="cpmManualAdv">Manuale</label>
+                            </div>
+                        </div>
+
+                        <!-- CPC ADV (Google) -->
+                        <div class="form-group hidden" id="cpcGroupAdv">
+                            <label for="cpcAdv">
+                                CPC (€) 
+                                <span class="channel-badge badge-google">GOOGLE</span>
+                                <span class="kpi-badge hidden" id="cpcBadgeAdv">AUTO</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" id="cpcAdv" min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="cpcManualAdv">
+                                <label for="cpcManualAdv">Manuale</label>
                             </div>
                         </div>
 
@@ -982,7 +1094,7 @@
         </div>
 
         <footer>
-            💡 Sistema completo di analisi marketing con calcolo CAC e LTV integrato
+            💡 Sistema completo con selezione canale Meta/Google e calcolo CAC/LTV integrato
         </footer>
     </div>
 
@@ -1087,6 +1199,105 @@
         let currentMode = 'base';
         let calculatedCAC = 0;
         let calculatedLTV = 0;
+
+        // CPC ESTIMATES per Google (se non presenti nello sheet)
+        const CPC_ESTIMATES = {
+            default: 1.50,
+            // Aggiungi stime specifiche se necessario
+        };
+
+        // ========================================
+        // CHANNEL SWITCHING
+        // ========================================
+        function setupChannelSwitch(prefix) {
+            const channelSelect = document.getElementById(`canale${prefix}`);
+            if (!channelSelect) return;
+
+            channelSelect.addEventListener('change', function() {
+                const isMeta = this.value === 'meta';
+                
+                // Show/Hide CPM (Meta) or CPC (Google)
+                const cpmGroup = document.getElementById(`cpmGroup${prefix}`);
+                const cpcGroup = document.getElementById(`cpcGroup${prefix}`);
+                
+                if (cpmGroup && cpcGroup) {
+                    if (isMeta) {
+                        cpmGroup.classList.remove('hidden');
+                        cpcGroup.classList.add('hidden');
+                        // Make CPM required, CPC not required
+                        const cpmInput = document.getElementById(`cpm${prefix}`);
+                        const cpcInput = document.getElementById(`cpc${prefix}`);
+                        if (cpmInput) cpmInput.required = true;
+                        if (cpcInput) cpcInput.required = false;
+                    } else {
+                        cpmGroup.classList.add('hidden');
+                        cpcGroup.classList.remove('hidden');
+                        // Make CPC required, CPM not required
+                        const cpmInput = document.getElementById(`cpm${prefix}`);
+                        const cpcInput = document.getElementById(`cpc${prefix}`);
+                        if (cpmInput) cpmInput.required = false;
+                        if (cpcInput) cpcInput.required = true;
+                    }
+                }
+
+                // Reload KPI if sector is selected
+                const settore = document.getElementById(`settore${prefix}`).value;
+                if (settore && kpiDatabase[settore]) {
+                    loadKPIForChannel(prefix, settore, this.value);
+                }
+            });
+        }
+
+        function loadKPIForChannel(prefix, settore, canale) {
+            const data = kpiDatabase[settore];
+            const isMeta = canale === 'meta';
+
+            // Load CPM/CPC based on channel
+            if (isMeta) {
+                const cpmManual = document.getElementById(`cpmManual${prefix}`);
+                if (!cpmManual || !cpmManual.checked) {
+                    const cpmInput = document.getElementById(`cpm${prefix}`);
+                    const cpmBadge = document.getElementById(`cpmBadge${prefix}`);
+                    if (cpmInput && data.cpm) {
+                        cpmInput.value = data.cpm;
+                        cpmInput.classList.add('auto-filled');
+                        if (cpmBadge) cpmBadge.classList.remove('hidden');
+                    }
+                }
+            } else {
+                const cpcManual = document.getElementById(`cpcManual${prefix}`);
+                if (!cpcManual || !cpcManual.checked) {
+                    const cpcInput = document.getElementById(`cpc${prefix}`);
+                    const cpcBadge = document.getElementById(`cpcBadge${prefix}`);
+                    if (cpcInput) {
+                        // Use CPC from database or estimate
+                        const cpcValue = data.cpc || CPC_ESTIMATES.default;
+                        cpcInput.value = cpcValue;
+                        cpcInput.classList.add('auto-filled');
+                        if (cpcBadge) cpcBadge.classList.remove('hidden');
+                    }
+                }
+            }
+
+            // Load CTR and CR (same for both channels)
+            ['ctr', 'cr'].forEach(field => {
+                const manualCheckbox = document.getElementById(`${field}Manual${prefix}`);
+                if (!manualCheckbox || !manualCheckbox.checked) {
+                    const input = document.getElementById(`${field}${prefix}`);
+                    const badge = document.getElementById(`${field}Badge${prefix}`);
+                    if (input && data[field]) {
+                        input.value = data[field];
+                        input.classList.add('auto-filled');
+                        if (badge) badge.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+
+        // Setup channel switching for all modes
+        setupChannelSwitch('Base');
+        setupChannelSwitch('Int');
+        setupChannelSwitch('Adv');
 
         // ========================================
         // MODAL FUNCTIONS
@@ -1221,9 +1432,18 @@
                     const ctr = parseFloat(row.c[3]?.v);
                     const cr = parseFloat(row.c[4]?.v);
                     const descrizione = row.c[5]?.v || '';
+                    // CPC potrebbe essere nella colonna 6 (opzionale)
+                    const cpc = row.c[6] ? parseFloat(row.c[6]?.v) : null;
                     
                     if (settore && nome && !isNaN(cpm) && !isNaN(ctr) && !isNaN(cr)) {
-                        kpiDatabase[settore] = { name: nome, cpm, ctr, cr, description: descrizione };
+                        kpiDatabase[settore] = { 
+                            name: nome, 
+                            cpm, 
+                            ctr, 
+                            cr, 
+                            cpc: cpc || CPC_ESTIMATES.default,
+                            description: descrizione 
+                        };
                         dataFound = true;
                     }
                 });
@@ -1273,30 +1493,82 @@
                 if (!settore || !kpiDatabase[settore]) return;
                 
                 const data = kpiDatabase[settore];
+                const canale = document.getElementById(`canale${prefix}`)?.value || 'meta';
                 
-                ['cpm', 'ctr', 'cr'].forEach(field => {
-                    const input = document.getElementById(`${field}${prefix}`);
-                    const badge = document.getElementById(`${field}Badge${prefix}`);
-                    const manual = document.getElementById(`${field}Manual${prefix}`);
-                    
-                    if (manual && !manual.checked) {
-                        input.value = data[field];
-                        input.classList.add('auto-filled');
-                        badge.classList.remove('hidden');
-                    }
-                });
+                // Load KPI based on selected channel
+                loadKPIForChannel(prefix, settore, canale);
 
                 const info = document.getElementById(`sectorInfo${prefix}`);
                 info.innerHTML = `
                     <p><strong>📊 ${data.name}</strong></p>
-                    <p>CPM: €${data.cpm} | CTR: ${data.ctr}% | CR: ${data.cr}%</p>
+                    <p>CPM: €${data.cpm} | CPC: €${data.cpc} | CTR: ${data.ctr}% | CR: ${data.cr}%</p>
                     <p style="font-size:0.85rem;margin-top:5px;">${data.description}</p>
                 `;
                 info.classList.remove('hidden');
             });
 
-            // Manual toggles
-            ['cpm', 'ctr', 'cr'].forEach(field => {
+            // Manual toggles for CPM
+            const cpmManual = document.getElementById(`cpmManual${prefix}`);
+            if (cpmManual) {
+                cpmManual.addEventListener('change', function() {
+                    const input = document.getElementById(`cpm${prefix}`);
+                    const badge = document.getElementById(`cpmBadge${prefix}`);
+                    
+                    if (this.checked) {
+                        input.removeAttribute('readonly');
+                        input.classList.remove('auto-filled');
+                        input.classList.add('manual-mode');
+                        input.placeholder = 'Inserisci valore';
+                        if (badge) badge.classList.add('hidden');
+                    } else {
+                        input.setAttribute('readonly', 'readonly');
+                        input.classList.remove('manual-mode');
+                        input.placeholder = 'Seleziona settore';
+                        
+                        const settore = document.getElementById(`settore${prefix}`).value;
+                        if (settore && kpiDatabase[settore]) {
+                            input.value = kpiDatabase[settore].cpm;
+                            input.classList.add('auto-filled');
+                            if (badge) badge.classList.remove('hidden');
+                        } else {
+                            input.value = '';
+                        }
+                    }
+                });
+            }
+
+            // Manual toggles for CPC
+            const cpcManual = document.getElementById(`cpcManual${prefix}`);
+            if (cpcManual) {
+                cpcManual.addEventListener('change', function() {
+                    const input = document.getElementById(`cpc${prefix}`);
+                    const badge = document.getElementById(`cpcBadge${prefix}`);
+                    
+                    if (this.checked) {
+                        input.removeAttribute('readonly');
+                        input.classList.remove('auto-filled');
+                        input.classList.add('manual-mode');
+                        input.placeholder = 'Inserisci valore';
+                        if (badge) badge.classList.add('hidden');
+                    } else {
+                        input.setAttribute('readonly', 'readonly');
+                        input.classList.remove('manual-mode');
+                        input.placeholder = 'Seleziona settore';
+                        
+                        const settore = document.getElementById(`settore${prefix}`).value;
+                        if (settore && kpiDatabase[settore]) {
+                            input.value = kpiDatabase[settore].cpc;
+                            input.classList.add('auto-filled');
+                            if (badge) badge.classList.remove('hidden');
+                        } else {
+                            input.value = '';
+                        }
+                    }
+                });
+            }
+
+            // Manual toggles for CTR and CR
+            ['ctr', 'cr'].forEach(field => {
                 const manualCheckbox = document.getElementById(`${field}Manual${prefix}`);
                 if (!manualCheckbox) return;
 
@@ -1309,7 +1581,7 @@
                         input.classList.remove('auto-filled');
                         input.classList.add('manual-mode');
                         input.placeholder = 'Inserisci valore';
-                        badge.classList.add('hidden');
+                        if (badge) badge.classList.add('hidden');
                     } else {
                         input.setAttribute('readonly', 'readonly');
                         input.classList.remove('manual-mode');
@@ -1319,7 +1591,7 @@
                         if (settore && kpiDatabase[settore]) {
                             input.value = kpiDatabase[settore][field];
                             input.classList.add('auto-filled');
-                            badge.classList.remove('hidden');
+                            if (badge) badge.classList.remove('hidden');
                         } else {
                             input.value = '';
                         }
@@ -1349,28 +1621,42 @@
 
         // BASE CALCULATION
         function calculateBase(data) {
-            const cpm = parseFloat(data.cpm);
+            const canale = data.canale;
             const ctr = parseFloat(data.ctr) / 100;
             const cr = parseFloat(data.cr) / 100;
             const budget = parseFloat(data.budget);
 
-            const impressions = (budget / cpm) * 1000;
-            const click = impressions * ctr;
+            let impressions, click, cpc, cpm;
+
+            if (canale === 'meta') {
+                // Use CPM
+                cpm = parseFloat(data.cpm);
+                impressions = (budget / cpm) * 1000;
+                click = impressions * ctr;
+                cpc = budget / click;
+            } else {
+                // Use CPC
+                cpc = parseFloat(data.cpc);
+                click = budget / cpc;
+                impressions = click / ctr;
+                cpm = (budget / impressions) * 1000;
+            }
+
             const conversioni = click * cr;
-            const cpc = budget / click;
             const cpa = budget / conversioni;
 
             return {
                 mode: 'base',
                 impressions, click, conversioni, cpc, cpa,
                 cpm, ctr: data.ctr, cr: data.cr, budget,
-                settore: data.settore
+                settore: data.settore, canale
             };
         }
 
         // INTERMEDIATE CALCULATION
         function calculateIntermediate(data) {
             const settore = data.settore;
+            const canale = data.canale;
             
             const costo = parseFloat(data.costo);
             const margine = parseFloat(data.margine);
@@ -1383,31 +1669,42 @@
                 conversioniObiettivo = parseFloat(data.obiettivoNumero);
             }
             
-            const cpm = parseFloat(data.cpm);
             const ctr = parseFloat(data.ctr) / 100;
             const cr = parseFloat(data.cr) / 100;
             
             const clickNecessari = conversioniObiettivo / cr;
-            const impressionsNecessarie = clickNecessari / ctr;
-            const budgetMinimo = (impressionsNecessarie / 1000) * cpm;
+            let budgetMinimo, cpm, cpc;
+
+            if (canale === 'meta') {
+                cpm = parseFloat(data.cpm);
+                const impressionsNecessarie = clickNecessari / ctr;
+                budgetMinimo = (impressionsNecessarie / 1000) * cpm;
+                cpc = budgetMinimo / clickNecessari;
+            } else {
+                cpc = parseFloat(data.cpc);
+                budgetMinimo = clickNecessari * cpc;
+                const impressionsNecessarie = clickNecessari / ctr;
+                cpm = (budgetMinimo / impressionsNecessarie) * 1000;
+            }
             
             const ricaviTotali = conversioniObiettivo * prezzoVendita;
             const mer = ricaviTotali / budgetMinimo;
-            const cpc = budgetMinimo / clickNecessari;
             const cpa = budgetMinimo / conversioniObiettivo;
+            const impressionsNecessarie = clickNecessari / ctr;
             
             return {
                 mode: 'intermediate',
                 budgetMinimo, conversioniObiettivo, mer, ricaviTotali,
                 prezzoVendita, margine, costo, cpm, ctr: data.ctr, cr: data.cr,
                 cpc, cpa, clickNecessari, impressionsNecessarie,
-                settore, tipoBusiness: data.tipoBusiness
+                settore, tipoBusiness: data.tipoBusiness, canale
             };
         }
 
         // ADVANCED CALCULATION
         function calculateAdvanced(data) {
             const settore = data.settore;
+            const canale = data.canale;
             
             const prezzoVendita = parseFloat(data.prezzoVendita);
             const costoProdotto = parseFloat(data.costoProdotto);
@@ -1418,9 +1715,7 @@
             const conversioni = parseFloat(data.conversioni);
             const margineNetto = parseFloat(data.margineNetto) / 100;
             
-            // CAC - usa valore inserito o calcola
             const cac = data.cac ? parseFloat(data.cac) : (budgetAdv / conversioni);
-            
             const cacLtvRatio = ltv / cac;
             
             const ricaviDaAdv = conversioni * prezzoVendita;
@@ -1436,12 +1731,23 @@
             const profittoNetto = profittoLordo - budgetAdv - altreSpese;
             const breakEven = budgetAdv / margineUnitario;
             
-            const cpm = parseFloat(data.cpm);
             const ctr = parseFloat(data.ctr) / 100;
             const cr = parseFloat(data.cr) / 100;
-            const impressions = (budgetAdv / cpm) * 1000;
-            const click = impressions * ctr;
-            const cpc = budgetAdv / click;
+
+            let impressions, click, cpc, cpm;
+
+            if (canale === 'meta') {
+                cpm = parseFloat(data.cpm);
+                impressions = (budgetAdv / cpm) * 1000;
+                click = impressions * ctr;
+                cpc = budgetAdv / click;
+            } else {
+                cpc = parseFloat(data.cpc);
+                click = budgetAdv / cpc;
+                impressions = click / ctr;
+                cpm = (budgetAdv / impressions) * 1000;
+            }
+            
             const cpa = budgetAdv / conversioni;
             
             return {
@@ -1452,12 +1758,12 @@
                 budgetAdv, investimentoMarketingTotale, altreSpese,
                 prezzoVendita, costoProdotto, acquistiMedi,
                 cpm, ctr: data.ctr, cr: data.cr, impressions, click, cpc, cpa,
-                settore
+                settore, canale
             };
         }
 
         // ========================================
-        // DISPLAY RESULTS
+        // DISPLAY RESULTS (continua con le stesse funzioni di prima)
         // ========================================
         function displayResults(data) {
             const resultsSection = document.getElementById('resultsSection');
@@ -1472,12 +1778,13 @@
 
         function displayBaseResults(data) {
             const settoreName = kpiDatabase[data.settore]?.name || data.settore;
+            const canaleLabel = data.canale === 'meta' ? 'Meta Ads' : 'Google Ads';
             
             document.getElementById('resultsSection').innerHTML = `
                 <div class="result-main">
                     <div class="result-label">CONVERSIONI TOTALI</div>
                     <div class="result-value">${formatNumber(data.conversioni)}</div>
-                    <div class="result-subtitle">Budget: ${formatCurrency(data.budget)} | ${settoreName}</div>
+                    <div class="result-subtitle">Budget: ${formatCurrency(data.budget)} | ${settoreName} | ${canaleLabel}</div>
                 </div>
 
                 <div class="metrics-grid">
@@ -1501,12 +1808,20 @@
                 <div class="breakdown-section">
                     <h3>📊 Breakdown</h3>
                     <div class="breakdown-item">
+                        <span class="breakdown-label">Canale:</span>
+                        <span class="breakdown-value">${canaleLabel}</span>
+                    </div>
+                    <div class="breakdown-item">
                         <span class="breakdown-label">CPA:</span>
                         <span class="breakdown-value">${formatCurrency(data.cpa)}</span>
                     </div>
                     <div class="breakdown-item">
                         <span class="breakdown-label">CPM:</span>
                         <span class="breakdown-value">${formatCurrency(data.cpm)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPC:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpc)}</span>
                     </div>
                     <div class="breakdown-item">
                         <span class="breakdown-label">CTR:</span>
@@ -1525,12 +1840,13 @@
         function displayIntermediateResults(data) {
             const settoreName = kpiDatabase[data.settore]?.name || data.settore;
             const tipoLabel = data.tipoBusiness === 'prodotto' ? 'Vendite' : 'Lead';
+            const canaleLabel = data.canale === 'meta' ? 'Meta Ads' : 'Google Ads';
             
             document.getElementById('resultsSection').innerHTML = `
                 <div class="result-main">
                     <div class="result-label">BUDGET MINIMO NECESSARIO</div>
                     <div class="result-value">${formatCurrency(data.budgetMinimo)}</div>
-                    <div class="result-subtitle">${formatNumber(data.conversioniObiettivo)} ${tipoLabel} | ${settoreName}</div>
+                    <div class="result-subtitle">${formatNumber(data.conversioniObiettivo)} ${tipoLabel} | ${settoreName} | ${canaleLabel}</div>
                 </div>
 
                 <div class="metrics-grid">
@@ -1554,6 +1870,10 @@
                 <div class="breakdown-section">
                     <h3>📊 Breakdown</h3>
                     <div class="breakdown-item">
+                        <span class="breakdown-label">Canale:</span>
+                        <span class="breakdown-value">${canaleLabel}</span>
+                    </div>
+                    <div class="breakdown-item">
                         <span class="breakdown-label">Prezzo Vendita:</span>
                         <span class="breakdown-value">${formatCurrency(data.prezzoVendita)}</span>
                     </div>
@@ -1568,6 +1888,10 @@
                     <div class="breakdown-item">
                         <span class="breakdown-label">CPM:</span>
                         <span class="breakdown-value">${formatCurrency(data.cpm)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPC:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpc)}</span>
                     </div>
                     <div class="breakdown-item">
                         <span class="breakdown-label">CTR:</span>
@@ -1593,6 +1917,7 @@
 
         function displayAdvancedResults(data) {
             const settoreName = kpiDatabase[data.settore]?.name || data.settore;
+            const canaleLabel = data.canale === 'meta' ? 'Meta Ads' : 'Google Ads';
             
             const cacLtvClass = data.cacLtvRatio >= 3 ? 'highlight' : (data.cacLtvRatio >= 2 ? '' : 'warning');
             const romiClass = data.romi >= 100 ? 'highlight' : (data.romi >= 50 ? '' : 'warning');
@@ -1601,7 +1926,7 @@
                 <div class="result-main">
                     <div class="result-label">ANALISI MARKETING AVANZATA</div>
                     <div class="result-value">${formatNumber(data.conversioni)}</div>
-                    <div class="result-subtitle">Conversioni | Budget: ${formatCurrency(data.budgetAdv)} | ${settoreName}</div>
+                    <div class="result-subtitle">Conversioni | Budget: ${formatCurrency(data.budgetAdv)} | ${settoreName} | ${canaleLabel}</div>
                 </div>
 
                 <h3 style="margin:30px 0 20px 0;font-size:1.3rem;color:#333;">🎯 Metriche Chiave</h3>
@@ -1677,8 +2002,16 @@
                 <div class="breakdown-section">
                     <h3>📊 Breakdown Completo</h3>
                     <div class="breakdown-item">
+                        <span class="breakdown-label">Canale:</span>
+                        <span class="breakdown-value">${canaleLabel}</span>
+                    </div>
+                    <div class="breakdown-item">
                         <span class="breakdown-label">CPM:</span>
                         <span class="breakdown-value">${formatCurrency(data.cpm)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPC:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpc)}</span>
                     </div>
                     <div class="breakdown-item">
                         <span class="breakdown-label">CTR:</span>
@@ -1687,10 +2020,6 @@
                     <div class="breakdown-item">
                         <span class="breakdown-label">CR:</span>
                         <span class="breakdown-value">${data.cr}%</span>
-                    </div>
-                    <div class="breakdown-item">
-                        <span class="breakdown-label">CPC:</span>
-                        <span class="breakdown-value">${formatCurrency(data.cpc)}</span>
                     </div>
                     <div class="breakdown-item">
                         <span class="breakdown-label">CPA:</span>
@@ -1720,38 +2049,61 @@
         // ========================================
         document.getElementById('formBase').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const canale = document.getElementById('canaleBase').value;
             const data = {
                 settore: document.getElementById('settoreBase').value,
-                cpm: document.getElementById('cpmBase').value,
+                canale: canale,
                 ctr: document.getElementById('ctrBase').value,
                 cr: document.getElementById('crBase').value,
                 budget: document.getElementById('budgetBase').value
             };
+
+            if (canale === 'meta') {
+                data.cpm = document.getElementById('cpmBase').value;
+            } else {
+                data.cpc = document.getElementById('cpcBase').value;
+            }
+            
             displayResults(calculateBase(data));
         });
 
         document.getElementById('formIntermediate').addEventListener('submit', function(e) {
             e.preventDefault();
+            
             const tipoObiettivo = document.querySelector('input[name="tipoObiettivoInt"]:checked').value;
+            const canale = document.getElementById('canaleInt').value;
+            
             const data = {
                 settore: document.getElementById('settoreInt').value,
+                canale: canale,
                 costo: document.getElementById('costoInt').value,
                 margine: document.getElementById('margineInt').value,
                 tipoObiettivo: tipoObiettivo,
                 obiettivoEuro: tipoObiettivo === 'euro' ? document.getElementById('obiettivoEuroValueInt').value : null,
                 obiettivoNumero: tipoObiettivo === 'numero' ? document.getElementById('obiettivoNumeroValueInt').value : null,
                 tipoBusiness: document.querySelector('input[name="tipoBusinessInt"]:checked').value,
-                cpm: document.getElementById('cpmInt').value,
                 ctr: document.getElementById('ctrInt').value,
                 cr: document.getElementById('crInt').value
             };
+
+            if (canale === 'meta') {
+                data.cpm = document.getElementById('cpmInt').value;
+            } else {
+                data.cpc = document.getElementById('cpcInt').value;
+            }
+            
             displayResults(calculateIntermediate(data));
         });
 
         document.getElementById('formAdvanced').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const canale = document.getElementById('canaleAdv').value;
+            
             const data = {
                 settore: document.getElementById('settoreAdv').value,
+                canale: canale,
                 prezzoVendita: document.getElementById('prezzoVenditaAdv').value,
                 costoProdotto: document.getElementById('costoProdottoAdv').value,
                 cac: document.getElementById('cacAdv').value,
@@ -1761,10 +2113,16 @@
                 altreSpese: document.getElementById('altreSpese').value,
                 conversioni: document.getElementById('conversioniAdv').value,
                 margineNetto: document.getElementById('margineNettoAdv').value,
-                cpm: document.getElementById('cpmAdv').value,
                 ctr: document.getElementById('ctrAdv').value,
                 cr: document.getElementById('crAdv').value
             };
+
+            if (canale === 'meta') {
+                data.cpm = document.getElementById('cpmAdv').value;
+            } else {
+                data.cpc = document.getElementById('cpcAdv').value;
+            }
+            
             displayResults(calculateAdvanced(data));
         });
 
