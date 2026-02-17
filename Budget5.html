@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Conversioni - 3 Modalità</title>
+    
+    <!-- Google Font - Manrope -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .app-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .app-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .app-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+
+        /* TOGGLE SWITCHER */
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.15);
+            padding: 10px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .toggle-option {
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 12px 24px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+            border: 2px solid transparent;
+        }
+
+        .toggle-option:hover {
+            opacity: 1;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .toggle-option.active {
+            background: white;
+            color: #667eea;
+            opacity: 1;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            transform: translateY(-2px);
+        }
+
+        .loading-indicator {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 1.2rem;
+        }
+
+        .loading-indicator.hidden {
+            display: none;
+        }
+
+        .content-wrapper {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* FORMS */
+        .calculator-mode {
+            display: none;
+        }
+
+        .calculator-mode.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .form-group .label-info {
+            font-weight: 400;
+            color: #999;
+            font-size: 0.85rem;
+            margin-left: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px 45px 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .form-group select {
+            padding-right: 20px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-weight: 600;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .toggle-manual {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .toggle-manual input[type="checkbox"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .radio-option input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .auto-filled {
+            background: #e8f5e9 !important;
+            border-color: #4caf50 !important;
+        }
+
+        .manual-mode {
+            background: #fff3e0 !important;
+            border-color: #ff9800 !important;
+        }
+
+        .kpi-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #4caf50;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .sheet-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #2196f3;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 8px;
+        }
+
+        .info-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .results-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 3px solid #f0f0f0;
+            display: none;
+        }
+
+        .results-section.active {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-main {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .result-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .result-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metrics-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .metric-card.highlight {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .metric-card.warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .metric-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .metric-card.highlight .metric-label,
+        .metric-card.warning .metric-label {
+            color: white;
+            opacity: 0.9;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #333;
+        }
+
+        .metric-card.highlight .metric-value,
+        .metric-card.warning .metric-value {
+            color: white;
+        }
+
+        .breakdown-section {
+            background: #fff9e6;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 25px;
+        }
+
+        .breakdown-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #ffe0b2;
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            color: #333;
+        }
+
+        .sector-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .sector-info p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .sector-info strong {
+            color: #1976d2;
+        }
+
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .sheet-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4caf50;
+            font-size: 0.9rem;
+        }
+
+        .sheet-info strong {
+            color: #2e7d32;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            padding: 20px;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .mode-toggle {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-value {
+                font-size: 2.5rem;
+            }
+
+            .app-header h1 {
+                font-size: 2rem;
+            }
+
+            .content-wrapper {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>🎯 Calcolatore Marketing Avanzato</h1>
+            
+            <!-- MODE TOGGLE -->
+            <div class="mode-toggle">
+                <div class="toggle-option active" data-mode="base">📊 Base</div>
+                <div class="toggle-option" data-mode="intermediate">⚙️ Intermedio</div>
+                <div class="toggle-option" data-mode="advanced">🚀 Avanzato</div>
+            </div>
+
+            <p id="headerSubtitle">Modalità Base - Calcolo Conversioni da Budget</p>
+        </header>
+
+        <div class="loading-indicator" id="loadingIndicator">
+            ⏳ Caricamento dati da Google Sheets...
+        </div>
+
+        <div class="content-wrapper" id="mainContent" style="display: none;">
+            <div class="sheet-info">
+                <strong>📊 Database connesso!</strong> I dati vengono caricati dal tuo Google Sheet. 
+                <span class="sheet-badge">LIVE</span>
+            </div>
+
+            <div id="errorContainer"></div>
+
+            <!-- ============================================ -->
+            <!-- MODALITÀ BASE -->
+            <!-- ============================================ -->
+            <div id="modeBase" class="calculator-mode active">
+                <form id="formBase">
+                    <div class="input-section">
+                        <div class="form-group full-width">
+                            <label for="settoreBase">🏢 Settore</label>
+                            <select id="settoreBase" required>
+                                <option value="">-- Caricamento... --</option>
+                            </select>
+                            <div id="sectorInfoBase" class="sector-info hidden"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cpmBase">CPM (€) <span class="kpi-badge hidden" id="cpmBadgeBase">AUTO</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" id="cpmBase" required min="0" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="cpmManualBase">
+                                <label for="cpmManualBase">Manuale</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ctrBase">CTR (%) <span class="kpi-badge hidden" id="ctrBadgeBase">AUTO</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" id="ctrBase" required min="0.01" max="100" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="ctrManualBase">
+                                <label for="ctrManualBase">Manuale</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="crBase">CR (%) <span class="kpi-badge hidden" id="crBadgeBase">AUTO</span></label>
+                            <div class="input-wrapper">
+                                <input type="number" id="crBase" required min="0.01" max="100" step="0.01" placeholder="Seleziona settore" readonly>
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="toggle-manual">
+                                <input type="checkbox" id="crManualBase">
+                                <label for="crManualBase">Manuale</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budgetBase">💰 Budget (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="budgetBase" required min="1" step="0.01" placeholder="1000.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="calculate-btn">🚀 Calcola Conversioni</button>
+                </form>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- MODALITÀ INTERMEDIA -->
+            <!-- ============================================ -->
+            <div id="modeIntermediate" class="calculator-mode">
+                <form id="formIntermediate">
+                    <div class="input-section">
+                        <div class="form-group full-width">
+                            <label for="settoreInt">🏢 Settore</label>
+                            <select id="settoreInt" required>
+                                <option value="">-- Seleziona --</option>
+                            </select>
+                            <div id="sectorInfoInt" class="sector-info hidden"></div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Tipo Business</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="tipoProdottoInt" name="tipoBusinessInt" value="prodotto" checked>
+                                    <label for="tipoProdottoInt">🛍️ Prodotto</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="tipoLeadInt" name="tipoBusinessInt" value="lead">
+                                    <label for="tipoLeadInt">📋 Lead</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="costoInt" id="labelCostoInt">💰 Costo Prodotto (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="costoInt" required min="0" step="0.01" placeholder="30.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="margineInt" id="labelMargineInt">📊 Margine (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="margineInt" required min="0" step="0.01" placeholder="70.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>Obiettivo</label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="obiettivoEuroInt" name="tipoObiettivoInt" value="euro" checked>
+                                    <label for="obiettivoEuroInt">💶 Fatturato</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="obiettivoNumeroInt" name="tipoObiettivoInt" value="numero">
+                                    <label for="obiettivoNumeroInt">🎯 N° Conversioni</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="obiettivoEuroGroupInt">
+                            <label for="obiettivoEuroValueInt">💰 Fatturato Obiettivo (€)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="obiettivoEuroValueInt" min="1" step="0.01" placeholder="50000.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group hidden" id="obiettivoNumeroGroupInt">
+                            <label for="obiettivoNumeroValueInt">🎯 N° Conversioni</label>
+                            <input type="number" id="obiettivoNumeroValueInt" min="1" placeholder="500">
+                        </div>
+
+                        <div class="form-group">
+                            <label>📊 KPI Auto (da Sheet)</label>
+                            <div class="info-box">
+                                <p><strong>CPM:</strong> <span id="displayCpmInt">-</span> €</p>
+                                <p><strong>CTR:</strong> <span id="displayCtrInt">-</span> %</p>
+                                <p><strong>CR:</strong> <span id="displayCrInt">-</span> %</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="calculate-btn">🚀 Calcola Budget Minimo & MER</button>
+                </form>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- MODALITÀ AVANZATA -->
+            <!-- ============================================ -->
+            <div id="modeAdvanced" class="calculator-mode">
+                <form id="formAdvanced">
+                    <div class="input-section">
+                        <div class="form-group full-width">
+                            <label for="settoreAdv">🏢 Settore</label>
+                            <select id="settoreAdv" required>
+                                <option value="">-- Seleziona --</option>
+                            </select>
+                            <div id="sectorInfoAdv" class="sector-info hidden"></div>
+                        </div>
+
+                        <!-- DATI PRODOTTO/SERVIZIO -->
+                        <div class="form-group">
+                            <label for="prezzoVenditaAdv">💰 Prezzo Vendita (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="prezzoVenditaAdv" required min="0" step="0.01" placeholder="100.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="costoProdottoAdv">🏷️ Costo Prodotto (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="costoProdottoAdv" required min="0" step="0.01" placeholder="30.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <!-- LTV -->
+                        <div class="form-group">
+                            <label for="ltvAdv">📈 LTV - Lifetime Value (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="ltvAdv" required min="0" step="0.01" placeholder="300.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <small style="display:block;margin-top:5px;color:#666;">Valore totale cliente nel tempo</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="acquisti MediaAdv">🔄 N° Acquisti Medi per Cliente *</label>
+                            <input type="number" id="acquistiMediaAdv" required min="1" step="0.1" placeholder="3" value="3">
+                            <small style="display:block;margin-top:5px;color:#666;">Quante volte acquista in media</small>
+                        </div>
+
+                        <!-- BUDGET E SPESE MARKETING -->
+                        <div class="form-group">
+                            <label for="budgetAdvAdv">💸 Budget ADV Mensile (€) *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="budgetAdvAdv" required min="0" step="0.01" placeholder="10000.00">
+                                <span class="input-suffix">€</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="altreSpese">🛠️ Altre Spese Marketing (€)</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="altreSpese" min="0" step="0.01" placeholder="2000.00" value="0">
+                                <span class="input-suffix">€</span>
+                            </div>
+                            <small style="display:block;margin-top:5px;color:#666;">Software, consulenze, team, etc.</small>
+                        </div>
+
+                        <!-- CONVERSIONI -->
+                        <div class="form-group">
+                            <label for="conversioniAdv">🎯 Conversioni Mensili *</label>
+                            <input type="number" id="conversioniAdv" required min="1" placeholder="100">
+                        </div>
+
+                        <!-- MARGINI -->
+                        <div class="form-group">
+                            <label for="margineNettoAdv">📊 Margine Netto % *</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="margineNettoAdv" required min="0" max="100" step="0.1" placeholder="70">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <small style="display:block;margin-top:5px;color:#666;">Dopo costi prodotto e operativi</small>
+                        </div>
+
+                        <!-- KPI AUTO -->
+                        <div class="form-group">
+                            <label>📊 KPI Auto (da Sheet)</label>
+                            <div class="info-box">
+                                <p><strong>CPM:</strong> <span id="displayCpmAdv">-</span> €</p>
+                                <p><strong>CTR:</strong> <span id="displayCtrAdv">-</span> %</p>
+                                <p><strong>CR:</strong> <span id="displayCrAdv">-</span> %</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="calculate-btn">🚀 Calcola Metriche Avanzate (CAC, LTV, ROAS, POAS, ROMI)</button>
+                </form>
+            </div>
+
+            <!-- RESULTS -->
+            <div class="results-section" id="resultsSection"></div>
+        </div>
+
+        <footer>
+            💡 Sistema di calcolo marketing completo con 3 livelli di analisi
+        </footer>
+    </div>
+
+    <script>
+        // ⚙️ CONFIG
+        const SHEET_ID = 'TUO_SHEET_ID_QUI';
+        const SHEET_NAME = 'Foglio1';
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_NAME}`;
+
+        let kpiDatabase = {};
+        let currentMode = 'base';
+
+        // ========================================
+        // TOGGLE MODE
+        // ========================================
+        document.querySelectorAll('.toggle-option').forEach(option => {
+            option.addEventListener('click', function() {
+                switchMode(this.dataset.mode);
+            });
+        });
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            document.querySelectorAll('.toggle-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+            
+            const subtitles = {
+                base: 'Modalità Base - Calcolo Conversioni da Budget',
+                intermediate: 'Modalità Intermedia - Budget Ottimale & MER',
+                advanced: 'Modalità Avanzata - Analisi Completa CAC, LTV, ROAS, POAS, ROMI'
+            };
+            document.getElementById('headerSubtitle').textContent = subtitles[mode];
+            
+            document.querySelectorAll('.calculator-mode').forEach(form => form.classList.remove('active'));
+            document.getElementById(`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}`).classList.add('active');
+            
+            document.getElementById('resultsSection').classList.remove('active');
+        }
+
+        // ========================================
+        // DYNAMIC LABELS INTERMEDIATE
+        // ========================================
+        document.querySelectorAll('input[name="tipoBusinessInt"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const isProdotto = this.value === 'prodotto';
+                document.getElementById('labelCostoInt').textContent = isProdotto ? '💰 Costo Prodotto (€) *' : '💰 Costo Lead (€) *';
+                document.getElementById('labelMargineInt').textContent = isProdotto ? '📊 Margine Prodotto (€) *' : '📊 Margine Lead (€) *';
+            });
+        });
+
+        document.querySelectorAll('input[name="tipoObiettivoInt"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const isEuro = this.value === 'euro';
+                document.getElementById('obiettivoEuroGroupInt').classList.toggle('hidden', !isEuro);
+                document.getElementById('obiettivoNumeroGroupInt').classList.toggle('hidden', isEuro);
+                document.getElementById('obiettivoEuroValueInt').required = isEuro;
+                document.getElementById('obiettivoNumeroValueInt').required = !isEuro;
+            });
+        });
+
+        // ========================================
+        // LOAD GOOGLE SHEETS
+        // ========================================
+        async function loadDataFromSheet() {
+            try {
+                const response = await fetch(SHEET_URL);
+                if (!response.ok) throw new Error('Impossibile accedere');
+                
+                const text = await response.text();
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
+                
+                if (rows.length === 0) throw new Error('Foglio vuoto');
+                
+                let dataFound = false;
+                rows.forEach((row, index) => {
+                    if (index === 0 && row.c[0]?.v === 'settore') return;
+                    
+                    const settore = row.c[0]?.v;
+                    const nome = row.c[1]?.v;
+                    const cpm = parseFloat(row.c[2]?.v);
+                    const ctr = parseFloat(row.c[3]?.v);
+                    const cr = parseFloat(row.c[4]?.v);
+                    const descrizione = row.c[5]?.v || '';
+                    
+                    if (settore && nome && !isNaN(cpm) && !isNaN(ctr) && !isNaN(cr)) {
+                        kpiDatabase[settore] = { name: nome, cpm, ctr, cr, description: descrizione };
+                        dataFound = true;
+                    }
+                });
+                
+                if (!dataFound) throw new Error('Nessun dato valido');
+                
+                populateSectors();
+                document.getElementById('loadingIndicator').classList.add('hidden');
+                document.getElementById('mainContent').style.display = 'block';
+                
+                console.log('✅ Caricati', Object.keys(kpiDatabase).length, 'settori');
+                
+            } catch (error) {
+                console.error('❌ Errore:', error);
+                showError('Errore caricamento Google Sheet. Verifica SHEET_ID.');
+            }
+        }
+
+        function populateSectors() {
+            ['settoreBase', 'settoreInt', 'settoreAdv'].forEach(id => {
+                const select = document.getElementById(id);
+                select.innerHTML = '<option value="">-- Seleziona settore --</option>';
+                
+                Object.keys(kpiDatabase).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = kpiDatabase[key].name;
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        function showError(message) {
+            document.getElementById('errorContainer').innerHTML = `<div class="error-message">⚠️ ${message}</div>`;
+            document.querySelector('.sheet-info').style.display = 'none';
+            document.getElementById('loadingIndicator').classList.add('hidden');
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        // ========================================
+        // SECTOR CHANGES
+        // ========================================
+        function setupSectorChange(prefix, hasManual = false) {
+            document.getElementById(`settore${prefix}`).addEventListener('change', function() {
+                const settore = this.value;
+                if (!settore || !kpiDatabase[settore]) return;
+                
+                const data = kpiDatabase[settore];
+                
+                if (hasManual) {
+                    ['cpm', 'ctr', 'cr'].forEach(field => {
+                        const input = document.getElementById(`${field}${prefix}`);
+                        const badge = document.getElementById(`${field}Badge${prefix}`);
+                        const manual = document.getElementById(`${field}Manual${prefix}`);
+                        
+                        if (!manual.checked) {
+                            input.value = data[field];
+                            input.classList.add('auto-filled');
+                            badge.classList.remove('hidden');
+                        }
+                    });
+                } else {
+                    document.getElementById(`displayCpm${prefix}`).textContent = data.cpm;
+                    document.getElementById(`displayCtr${prefix}`).textContent = data.ctr;
+                    document.getElementById(`displayCr${prefix}`).textContent = data.cr;
+                }
+
+                const info = document.getElementById(`sectorInfo${prefix}`);
+                info.innerHTML = `
+                    <p><strong>📊 ${data.name}</strong></p>
+                    <p>CPM: €${data.cpm} | CTR: ${data.ctr}% | CR: ${data.cr}%</p>
+                    <p style="font-size:0.85rem;margin-top:5px;">${data.description}</p>
+                `;
+                info.classList.remove('hidden');
+            });
+        }
+
+        setupSectorChange('Base', true);
+        setupSectorChange('Int', false);
+        setupSectorChange('Adv', false);
+
+        // MANUAL MODE BASE
+        ['cpm', 'ctr', 'cr'].forEach(field => {
+            document.getElementById(`${field}ManualBase`).addEventListener('change', function() {
+                const input = document.getElementById(`${field}Base`);
+                const badge = document.getElementById(`${field}BadgeBase`);
+                
+                if (this.checked) {
+                    input.removeAttribute('readonly');
+                    input.classList.remove('auto-filled');
+                    input.classList.add('manual-mode');
+                    input.placeholder = 'Inserisci';
+                    badge.classList.add('hidden');
+                } else {
+                    input.setAttribute('readonly', 'readonly');
+                    input.classList.remove('manual-mode');
+                    input.placeholder = 'Seleziona settore';
+                    
+                    const settore = document.getElementById('settoreBase').value;
+                    if (settore && kpiDatabase[settore]) {
+                        input.value = kpiDatabase[settore][field];
+                        input.classList.add('auto-filled');
+                        badge.classList.remove('hidden');
+                    } else {
+                        input.value = '';
+                    }
+                }
+            });
+        });
+
+        // ========================================
+        // CALCULATIONS
+        // ========================================
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value);
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat('it-IT').format(Math.round(value));
+        }
+
+        function formatDecimal(value, decimals = 2) {
+            return value.toFixed(decimals);
+        }
+
+        // BASE
+        function calculateBase(data) {
+            const cpm = parseFloat(data.cpm);
+            const ctr = parseFloat(data.ctr) / 100;
+            const cr = parseFloat(data.cr) / 100;
+            const budget = parseFloat(data.budget);
+
+            const impressions = (budget / cpm) * 1000;
+            const click = impressions * ctr;
+            const conversioni = click * cr;
+            const cpc = budget / click;
+            const cpa = budget / conversioni;
+
+            return {
+                mode: 'base',
+                impressions, click, conversioni, cpc, cpa,
+                cpm, ctr: data.ctr, cr: data.cr, budget,
+                settore: data.settore
+            };
+        }
+
+        // INTERMEDIATE
+        function calculateIntermediate(data) {
+            const settore = data.settore;
+            const kpi = kpiDatabase[settore];
+            
+            const costo = parseFloat(data.costo);
+            const margine = parseFloat(data.margine);
+            const prezzoVendita = costo + margine;
+            
+            let conversioniObiettivo;
+            if (data.tipoObiettivo === 'euro') {
+                conversioniObiettivo = parseFloat(data.obiettivoEuro) / prezzoVendita;
+            } else {
+                conversioniObiettivo = parseFloat(data.obiettivoNumero);
+            }
+            
+            const cpm = kpi.cpm;
+            const ctr = kpi.ctr / 100;
+            const cr = kpi.cr / 100;
+            
+            const clickNecessari = conversioniObiettivo / cr;
+            const impressionsNecessarie = clickNecessari / ctr;
+            const budgetMinimo = (impressionsNecessarie / 1000) * cpm;
+            
+            const ricaviTotali = conversioniObiettivo * prezzoVendita;
+            const mer = ricaviTotali / budgetMinimo;
+            const cpc = budgetMinimo / clickNecessari;
+            const cpa = budgetMinimo / conversioniObiettivo;
+            
+            return {
+                mode: 'intermediate',
+                budgetMinimo, conversioniObiettivo, mer, ricaviTotali,
+                prezzoVendita, margine, costo, cpm, ctr: kpi.ctr, cr: kpi.cr,
+                cpc, cpa, clickNecessari, impressionsNecessarie,
+                settore, tipoBusiness: data.tipoBusiness
+            };
+        }
+
+        // ADVANCED
+        function calculateAdvanced(data) {
+            const settore = data.settore;
+            const kpi = kpiDatabase[settore];
+            
+            const prezzoVendita = parseFloat(data.prezzoVendita);
+            const costoProdotto = parseFloat(data.costoProdotto);
+            const ltv = parseFloat(data.ltv);
+            const acquistiMedi = parseFloat(data.acquistiMedi);
+            const budgetAdv = parseFloat(data.budgetAdv);
+            const altreSpese = parseFloat(data.altreSpese) || 0;
+            const conversioni = parseFloat(data.conversioni);
+            const margineNetto = parseFloat(data.margineNetto) / 100;
+            
+            // CAC = Customer Acquisition Cost
+            const cac = budgetAdv / conversioni;
+            
+            // CAC:LTV Ratio
+            const cacLtvRatio = ltv / cac;
+            
+            // ROAS = Return On Ad Spend
+            const ricaviDaAdv = conversioni * prezzoVendita;
+            const roas = ricaviDaAdv / budgetAdv;
+            
+            // POAS = Profit On Ad Spend
+            const profittoLordo = ricaviDaAdv * margineNetto;
+            const poas = profittoLordo / budgetAdv;
+            
+            // ROMI = Return On Marketing Investment
+            const investimentoMarketingTotale = budgetAdv + altreSpese;
+            const romi = ((profittoLordo - investimentoMarketingTotale) / investimentoMarketingTotale) * 100;
+            
+            // Altre metriche
+            const margineUnitario = prezzoVendita - costoProdotto;
+            const profittoNetto = profittoLordo - budgetAdv - altreSpese;
+            const breakEven = budgetAdv / margineUnitario;
+            
+            // Metriche KPI
+            const cpm = kpi.cpm;
+            const ctr = kpi.ctr / 100;
+            const cr = kpi.cr / 100;
+            const impressions = (budgetAdv / cpm) * 1000;
+            const click = impressions * ctr;
+            const cpc = budgetAdv / click;
+            const cpa = budgetAdv / conversioni;
+            
+            return {
+                mode: 'advanced',
+                cac, ltv, cacLtvRatio, roas, poas, romi,
+                ricaviDaAdv, profittoLordo, profittoNetto,
+                margineUnitario, breakEven, conversioni,
+                budgetAdv, investimentoMarketingTotale, altreSpese,
+                prezzoVendita, costoProdotto, acquistiMedi,
+                cpm, ctr: kpi.ctr, cr: kpi.cr, impressions, click, cpc, cpa,
+                settore
+            };
+        }
+
+        // ========================================
+        // DISPLAY RESULTS
+        // ========================================
+        function displayResults(data) {
+            const resultsSection = document.getElementById('resultsSection');
+            resultsSection.classList.add('active');
+            
+            if (data.mode === 'base') displayBaseResults(data);
+            else if (data.mode === 'intermediate') displayIntermediateResults(data);
+            else displayAdvancedResults(data);
+            
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function displayBaseResults(data) {
+            const settoreName = kpiDatabase[data.settore]?.name || data.settore;
+            
+            document.getElementById('resultsSection').innerHTML = `
+                <div class="result-main">
+                    <div class="result-label">CONVERSIONI TOTALI</div>
+                    <div class="result-value">${formatNumber(data.conversioni)}</div>
+                    <div class="result-subtitle">Budget: ${formatCurrency(data.budget)} | ${settoreName}</div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">👁️</div>
+                        <div class="metric-label">Impressions</div>
+                        <div class="metric-value">${formatNumber(data.impressions)}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">👆</div>
+                        <div class="metric-label">Click</div>
+                        <div class="metric-value">${formatNumber(data.click)}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-label">CPC</div>
+                        <div class="metric-value">${formatCurrency(data.cpc)}</div>
+                    </div>
+                </div>
+
+                <div class="breakdown-section">
+                    <h3>📊 Breakdown</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPA:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpa)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPM:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpm)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CTR:</span>
+                        <span class="breakdown-value">${data.ctr}%</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CR:</span>
+                        <span class="breakdown-value">${data.cr}%</span>
+                    </div>
+                </div>
+
+                <button class="reset-btn" onclick="resetForm()">🔄 Nuovo Calcolo</button>
+            `;
+        }
+
+        function displayIntermediateResults(data) {
+            const settoreName = kpiDatabase[data.settore]?.name || data.settore;
+            const tipoLabel = data.tipoBusiness === 'prodotto' ? 'Vendite' : 'Lead';
+            
+            document.getElementById('resultsSection').innerHTML = `
+                <div class="result-main">
+                    <div class="result-label">BUDGET MINIMO NECESSARIO</div>
+                    <div class="result-value">${formatCurrency(data.budgetMinimo)}</div>
+                    <div class="result-subtitle">${formatNumber(data.conversioniObiettivo)} ${tipoLabel} | ${settoreName}</div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card highlight">
+                        <div class="metric-icon">💹</div>
+                        <div class="metric-label">MER</div>
+                        <div class="metric-value">${formatDecimal(data.mer, 2)}x</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-label">Ricavi Totali</div>
+                        <div class="metric-value">${formatCurrency(data.ricaviTotali)}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-label">${tipoLabel}</div>
+                        <div class="metric-value">${formatNumber(data.conversioniObiettivo)}</div>
+                    </div>
+                </div>
+
+                <div class="breakdown-section">
+                    <h3>📊 Breakdown</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Prezzo Vendita:</span>
+                        <span class="breakdown-value">${formatCurrency(data.prezzoVendita)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Margine Unitario:</span>
+                        <span class="breakdown-value">${formatCurrency(data.margine)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPA:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpa)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Click Necessari:</span>
+                        <span class="breakdown-value">${formatNumber(data.clickNecessari)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Impressions:</span>
+                        <span class="breakdown-value">${formatNumber(data.impressionsNecessarie)}</span>
+                    </div>
+                </div>
+
+                <button class="reset-btn" onclick="resetForm()">🔄 Nuovo Calcolo</button>
+            `;
+        }
+
+        function displayAdvancedResults(data) {
+            const settoreName = kpiDatabase[data.settore]?.name || data.settore;
+            
+            // Status classes per CAC:LTV e ROMI
+            const cacLtvClass = data.cacLtvRatio >= 3 ? 'highlight' : (data.cacLtvRatio >= 2 ? '' : 'warning');
+            const romiClass = data.romi >= 100 ? 'highlight' : (data.romi >= 50 ? '' : 'warning');
+            
+            document.getElementById('resultsSection').innerHTML = `
+                <div class="result-main">
+                    <div class="result-label">ANALISI MARKETING AVANZATA</div>
+                    <div class="result-value">${formatNumber(data.conversioni)}</div>
+                    <div class="result-subtitle">Conversioni | Budget: ${formatCurrency(data.budgetAdv)} | ${settoreName}</div>
+                </div>
+
+                <h3 style="margin:30px 0 20px 0;font-size:1.3rem;color:#333;">🎯 Metriche Chiave</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">💰</div>
+                        <div class="metric-label">CAC</div>
+                        <div class="metric-value">${formatCurrency(data.cac)}</div>
+                        <small style="color:#666;margin-top:5px;display:block;">Customer Acquisition Cost</small>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-label">LTV</div>
+                        <div class="metric-value">${formatCurrency(data.ltv)}</div>
+                        <small style="color:#666;margin-top:5px;display:block;">Lifetime Value</small>
+                    </div>
+                    <div class="metric-card ${cacLtvClass}">
+                        <div class="metric-icon">⚖️</div>
+                        <div class="metric-label">CAC:LTV Ratio</div>
+                        <div class="metric-value">1:${formatDecimal(data.cacLtvRatio, 1)}</div>
+                        <small style="opacity:0.8;margin-top:5px;display:block;">Target: ≥ 1:3</small>
+                    </div>
+                </div>
+
+                <h3 style="margin:30px 0 20px 0;font-size:1.3rem;color:#333;">💹 Rendimenti</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">📊</div>
+                        <div class="metric-label">ROAS</div>
+                        <div class="metric-value">${formatDecimal(data.roas, 2)}x</div>
+                        <small style="color:#666;margin-top:5px;display:block;">Return On Ad Spend</small>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">💵</div>
+                        <div class="metric-label">POAS</div>
+                        <div class="metric-value">${formatDecimal(data.poas, 2)}x</div>
+                        <small style="color:#666;margin-top:5px;display:block;">Profit On Ad Spend</small>
+                    </div>
+                    <div class="metric-card ${romiClass}">
+                        <div class="metric-icon">🎯</div>
+                        <div class="metric-label">ROMI</div>
+                        <div class="metric-value">${formatDecimal(data.romi, 0)}%</div>
+                        <small style="opacity:0.8;margin-top:5px;display:block;">Return On Marketing Investment</small>
+                    </div>
+                </div>
+
+                <h3 style="margin:30px 0 20px 0;font-size:1.3rem;color:#333;">💰 Profittabilità</h3>
+                <div class="metrics-grid two-col">
+                    <div class="metric-card">
+                        <div class="metric-icon">💸</div>
+                        <div class="metric-label">Ricavi da ADV</div>
+                        <div class="metric-value">${formatCurrency(data.ricaviDaAdv)}</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">📈</div>
+                        <div class="metric-label">Profitto Lordo</div>
+                        <div class="metric-value">${formatCurrency(data.profittoLordo)}</div>
+                    </div>
+                    <div class="metric-card ${data.profittoNetto > 0 ? 'highlight' : 'warning'}">
+                        <div class="metric-icon">💎</div>
+                        <div class="metric-label">Profitto Netto</div>
+                        <div class="metric-value">${formatCurrency(data.profittoNetto)}</div>
+                        <small style="opacity:0.8;margin-top:5px;display:block;">Dopo tutte le spese marketing</small>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">⚡</div>
+                        <div class="metric-label">Break-Even</div>
+                        <div class="metric-value">${formatNumber(data.breakEven)}</div>
+                        <small style="color:#666;margin-top:5px;display:block;">Vendite necessarie</small>
+                    </div>
+                </div>
+
+                <div class="breakdown-section">
+                    <h3>📊 Breakdown Completo</h3>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Budget ADV:</span>
+                        <span class="breakdown-value">${formatCurrency(data.budgetAdv)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Altre Spese Marketing:</span>
+                        <span class="breakdown-value">${formatCurrency(data.altreSpese)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Investimento Totale:</span>
+                        <span class="breakdown-value">${formatCurrency(data.investimentoMarketingTotale)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Conversioni:</span>
+                        <span class="breakdown-value">${formatNumber(data.conversioni)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Prezzo Vendita:</span>
+                        <span class="breakdown-value">${formatCurrency(data.prezzoVendita)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Costo Prodotto:</span>
+                        <span class="breakdown-value">${formatCurrency(data.costoProdotto)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Margine Unitario:</span>
+                        <span class="breakdown-value">${formatCurrency(data.margineUnitario)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Acquisti Medi/Cliente:</span>
+                        <span class="breakdown-value">${data.acquistiMedi}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPA:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpa)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPC:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpc)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">CPM:</span>
+                        <span class="breakdown-value">${formatCurrency(data.cpm)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Click Totali:</span>
+                        <span class="breakdown-value">${formatNumber(data.click)}</span>
+                    </div>
+                    <div class="breakdown-item">
+                        <span class="breakdown-label">Impressions:</span>
+                        <span class="breakdown-value">${formatNumber(data.impressions)}</span>
+                    </div>
+                </div>
+
+                <button class="reset-btn" onclick="resetForm()">🔄 Nuovo Calcolo</button>
+            `;
+        }
+
+        function resetForm() {
+            document.getElementById('resultsSection').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ========================================
+        // FORM SUBMISSIONS
+        // ========================================
+        document.getElementById('formBase').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                settore: document.getElementById('settoreBase').value,
+                cpm: document.getElementById('cpmBase').value,
+                ctr: document.getElementById('ctrBase').value,
+                cr: document.getElementById('crBase').value,
+                budget: document.getElementById('budgetBase').value
+            };
+            displayResults(calculateBase(data));
+        });
+
+        document.getElementById('formIntermediate').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const tipoObiettivo = document.querySelector('input[name="tipoObiettivoInt"]:checked').value;
+            const data = {
+                settore: document.getElementById('settoreInt').value,
+                costo: document.getElementById('costoInt').value,
+                margine: document.getElementById('margineInt').value,
+                tipoObiettivo: tipoObiettivo,
+                obiettivoEuro: tipoObiettivo === 'euro' ? document.getElementById('obiettivoEuroValueInt').value : null,
+                obiettivoNumero: tipoObiettivo === 'numero' ? document.getElementById('obiettivoNumeroValueInt').value : null,
+                tipoBusiness: document.querySelector('input[name="tipoBusinessInt"]:checked').value
+            };
+            displayResults(calculateIntermediate(data));
+        });
+
+        document.getElementById('formAdvanced').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                settore: document.getElementById('settoreAdv').value,
+                prezzoVendita: document.getElementById('prezzoVenditaAdv').value,
+                costoProdotto: document.getElementById('costoProdottoAdv').value,
+                ltv: document.getElementById('ltvAdv').value,
+                acquistiMedi: document.getElementById('acquistiMediaAdv').value,
+                budgetAdv: document.getElementById('budgetAdvAdv').value,
+                altreSpese: document.getElementById('altreSpese').value,
+                conversioni: document.getElementById('conversioniAdv').value,
+                margineNetto: document.getElementById('margineNettoAdv').value
+            };
+            displayResults(calculateAdvanced(data));
+        });
+
+        // ========================================
+        // INIT
+        // ========================================
+        window.addEventListener('DOMContentLoaded', loadDataFromSheet);
+    </script>
+</body>
+</html>
